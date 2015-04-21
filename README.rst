@@ -1,3 +1,7 @@
+Modified from kennethreitz's inbox.py for use for ArchiveTeam Project Newsletter
+
+Original README:
+
 Inbox.py: SMTP Server for Humans
 ================================
 
