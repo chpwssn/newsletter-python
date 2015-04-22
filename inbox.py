@@ -27,8 +27,8 @@ class InboxServer(smtpd.SMTPServer, object):
         attachments = []
         for part_of_mail in Parser().parsestr(data).walk():
             attachment, mailcontent = self.parse_data(data)
-            if not mailcontact == None:
-                mail = mailcontect
+            if not mailcontent == None:
+                mail = mailcontent
             else:
                 attachments.append(attachment)
         
