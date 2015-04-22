@@ -50,7 +50,7 @@ class InboxServer(smtpd.SMTPServer, object):
     def parse_data(self, data):
         # Check is part of mail is message or attachment
         # Decode support
-        attachment = []
+        attachment = None
         mailcontent = None
         
         return(attachment, mailcontent)

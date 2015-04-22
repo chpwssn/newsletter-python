@@ -30,8 +30,7 @@ def handle(rawdata, to, sender, subject, body, attachments):
 			file.write(body+"\n")
 		if not attachments == None:
 			for attachment in attachments:
-				for component in attachment:
-					file.write(attachment+"\n");
+				file.write(attachment+"\n");
 		file.write(rawdata+"\n");
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
 	#Write the components to the .json file, better for processing later but doesn't solve encoding
