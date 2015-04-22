@@ -26,8 +26,10 @@ def handle(to, sender, subject, body, attachments):
 		file.write(str(to)+"\n")
 		file.write(str(sender)+"\n")
 		file.write(str(subject)+"\n")
-		file.write(body+"\n")
-        file.write(attachments+"\n");
+        if not body == None:
+            file.write(body+"\n")
+        if not attachments == None:
+            file.write(attachments+"\n");
     #Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
 		jsonfile.write(json.dumps({"to":to,"sender":sender,"subject":subject,"body":body,"attachments":attachments}))
