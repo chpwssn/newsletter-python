@@ -26,11 +26,12 @@ def handle(rawdata, to, sender, subject, body, attachments):
 		file.write(str(to)+"\n")
 		file.write(str(sender)+"\n")
 		file.write(str(subject)+"\n")
-		if body:
+		if not body == None:
 			file.write(body+"\n")
-		if attachments:
+		if not attachments == None:
 			for attachment in attachments:
-				file.write(attachment+"\n");
+				for component in attachment:
+					file.write(attachment+"\n");
 		file.write(rawdata+"\n");
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
 	#Write the components to the .json file, better for processing later but doesn't solve encoding
