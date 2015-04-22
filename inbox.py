@@ -4,6 +4,7 @@ import smtpd
 import asyncore
 import argparse
 from email.parser import Parser
+from email.Header import decode_header
 
 from logbook import Logger
 
@@ -20,9 +21,39 @@ class InboxServer(smtpd.SMTPServer, object):
 
     def process_message(self, peer, mailfrom, rcpttos, data):
         log.info('Collating message from {0}'.format(mailfrom))
-        subject = Parser().parsestr(data)['subject']
-        log.debug(dict(to=rcpttos, sender=mailfrom, subject=subject, body=data))
-        return self._handler(to=rcpttos, sender=mailfrom, subject=subject, body=data)
+        log.info('Length of message {0}'.format(len(data)))
+        subject = self.parse_subject(Parser().parsestr(data)['subject'])
+        mail = None
+        attachments = []
+        for part_of_mail in Parser().parsestr(data).walk():
+            attachment, mailcontent = self.parse_data(data)
+            if not mailcontact == None:
+                mail = mailcontect
+            else:
+                attachments.append(attachment)
+        
+        log.debug(dict(to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments))
+        return self._handler(to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments)
+        
+    def parse_subject(self, subject):
+        # Decode subject if encoded
+        encoded = decode_header(subject)
+        subjectpart = []
+        for a, b in encoded:
+            if b:
+                subjectpart.append(unicode(a, b).encode('utf8','replace')
+            else:
+                subjectpart.append(a)
+        subject = ''.join(subjectpart))
+        return subject
+        
+    def parse_data(self, data):
+        # Check is part of mail is message or attachment
+        # Decode support
+        attachment = []
+        mailcontent = None
+        
+        return(attachment, mailcontent)
 
 
 class Inbox(object):
