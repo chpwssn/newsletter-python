@@ -20,7 +20,7 @@ inbox = Inbox()
 @inbox.collate
 
 #Our message handling function
-def handle(to, sender, subject, body, attachments):
+def handle(rawdata, to, sender, subject, body, attachments):
 	#Write the components to the .txt file separated by newlines (ok but a little more readable)
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".txt","w") as file:
 		file.write(str(to)+"\n")
@@ -31,10 +31,11 @@ def handle(to, sender, subject, body, attachments):
 		if attachments:
 			for attachment in attachments:
 				file.write(attachment+"\n");
+        file.write(rawdata+"\n");
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
 	#Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
-		jsonfile.write(json.dumps({"to":to,"sender":sender,"subject":subject,"body":body,"attachments":attachments}))
+		jsonfile.write(json.dumps({"rawdata":rawdata,"to":to,"sender":sender,"subject":subject,"body":body,"attachments":attachments}))
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
 
 

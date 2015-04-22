@@ -32,8 +32,8 @@ class InboxServer(smtpd.SMTPServer, object):
             else:
                 attachments.append(attachment)
         
-        log.debug(dict(to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments))
-        return self._handler(to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments)
+        log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments))
+        return self._handler(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments)
         
     def parse_subject(self, subject):
         # Decode subject if encoded
