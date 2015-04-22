@@ -31,7 +31,7 @@ def handle(rawdata, to, sender, subject, body, attachments):
 		if attachments:
 			for attachment in attachments:
 				file.write(attachment+"\n");
-        file.write(rawdata+"\n");
+		file.write(rawdata+"\n");
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
 	#Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
