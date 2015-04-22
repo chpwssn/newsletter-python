@@ -26,13 +26,16 @@ def handle(to, sender, subject, body, attachments):
 		file.write(str(to)+"\n")
 		file.write(str(sender)+"\n")
 		file.write(str(subject)+"\n")
-        if not body == None:
+        if body:
             file.write(body+"\n")
-        if not attachments == None:
+        if attachments:
             file.write(attachments+"\n");
+    print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
     #Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
 		jsonfile.write(json.dumps({"to":to,"sender":sender,"subject":subject,"body":body,"attachments":attachments}))
+    print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
+
 
 #Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
