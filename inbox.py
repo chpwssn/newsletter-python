@@ -41,10 +41,10 @@ class InboxServer(smtpd.SMTPServer, object):
         subjectpart = []
         for a, b in encoded:
             if b:
-                subjectpart.append(unicode(a, b).encode('utf8','replace')
+                subjectpart.append(unicode(a, b).encode('utf8','replace'))
             else:
                 subjectpart.append(a)
-        subject = ''.join(subjectpart))
+        subject = ''.join(subjectpart)
         return subject
         
     def parse_data(self, data):

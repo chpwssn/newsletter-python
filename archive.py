@@ -12,6 +12,7 @@
 # Stability and watchdogs
 
 from inbox import Inbox
+from config import *
 import time,json
 
 #Create the inbox.py object
@@ -31,4 +32,4 @@ def handle(to, sender, subject, body):
 		jsonfile.write(json.dumps({"to":to,"sender":sender,"subject":subject,"body":body}))
 
 #Start the inbox.py server on our local ip address
-inbox.serve(address='172.31.34.123', port=25)
+inbox.serve(address=localIPAddress, port=25)
