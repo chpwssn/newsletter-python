@@ -54,8 +54,8 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachments}))
 	# Write the html body to a html file by itself
-	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
-		mailhtmlfile.write(mailhtml)
+#with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
+#mailhtmlfile.write(mailhtml)
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
