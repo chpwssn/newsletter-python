@@ -23,13 +23,13 @@ timenow = time.time()
 @inbox.collate
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
-    # Write new mails to index.html
+	# Write new mails to index.html
 	if not os.path.exists("/home/ubuntu/newspoc/index.html"):
-    		open("/home/ubuntu/newspoc/index.html", "w").close() 
+			open("/home/ubuntu/newspoc/index.html", "w").close() 
 	with open("/home/ubuntu/newspoc/index.html", "a") as index:
 		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a>\n")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
-    # Write the components to the .html file separated by newlines (ok but a little more readable)
+	# Write the components to the .html file separated by newlines (ok but a little more readable)
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
 		file.write("TO:\n"+str(to)+"\n")
 		file.write("SENDER:\n"+str(sender)+"\n")
@@ -42,15 +42,15 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		if not mailplain == None:
 			file.write("PLAINTEXT:\n"+mailplain+"\n")
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".html"
-    #Check to see if the directory we are going to write to exists
-    directoryName = sender+"-"+subject+"-"+str(int(timenow))
-    if not os.path.isdir("/home/ubuntu/newspoc/"+directoryName):
-        os.makedirs(directoryName)
+	#Check to see if the directory we are going to write to exists
+	directoryName = sender+"-"+subject+"-"+str(int(timenow))
+	if not os.path.isdir("/home/ubuntu/newspoc/"+directoryName):
+		os.makedirs(directoryName)
 	for attachment in attachments:
 		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[2],"w") as file:
 			file.write(attachment[2])
 		print "Wrote attachment"+attachment[2]
-    # Write the components to the .json file, better for processing later but doesn't solve encoding
+	# Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachments}))
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
