@@ -19,6 +19,7 @@ import os
 # Create the inbox.py object
 inbox = Inbox()
 timenow = time.time()
+attachmentsjson = []
 
 @inbox.collate
 # Our message handling function
@@ -50,9 +51,10 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[2],"w") as file:
 			file.write(attachment[1])
 		print "Wrote attachment"+attachment[2]
+		attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 	# Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
-		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachments}))
+		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 	# Write the html body to a html file by itself
 #with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
 #mailhtmlfile.write(mailhtml)
