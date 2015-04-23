@@ -60,7 +60,7 @@ class InboxServer(smtpd.SMTPServer, object):
         if part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain":
             mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True)])
         elif part_of_mail.get_content_type() == "application/octet-stream":
-            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename()])
+            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename(), part_of_mail.get_payload()])
         
         return(mailcontent)
 
