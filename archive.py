@@ -47,8 +47,8 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	if not os.path.isdir("/home/ubuntu/newspoc/"+directoryName):
 		os.makedirs("/home/ubuntu/newspoc/"+directoryName)
 	for attachment in attachments:
-		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[2],"w") as file:
-			file.write(attachment[2])
+		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[1],"w") as file:
+			file.write(attachment[1])
 		print "Wrote attachment"+attachment[2]
 	# Write the components to the .json file, better for processing later but doesn't solve encoding
 	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
