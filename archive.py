@@ -14,31 +14,41 @@
 from inbox import Inbox
 from config import *
 import time,json
+import os
 
-#Create the inbox.py object
+# Create the inbox.py object
 inbox = Inbox()
+timenow = time.time()
+
 @inbox.collate
-
-#Our message handling function
-def handle(rawdata, to, sender, subject, body, attachments):
-	#Write the components to the .txt file separated by newlines (ok but a little more readable)
-	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".txt","w") as file:
-		file.write(str(to)+"\n")
-		file.write(str(sender)+"\n")
-		file.write(str(subject)+"\n")
-		if not body == None:
-			file.write(body+"\n")
-		if not attachments == None:
-			for attachment in attachments:
-				if not attachment == None:
-					file.write(attachment+"\n");
-		file.write(rawdata+"\n");
-	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".txt"
-	#Write the components to the .json file, better for processing later but doesn't solve encoding
-	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
-		jsonfile.write(json.dumps({"rawdata":rawdata,"to":to,"sender":sender,"subject":subject,"body":body,"attachments":attachments}))
+# Our message handling function
+def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
+    # Write new mails to index.html
+	if not os.path.exists("/home/ubuntu/newspoc/index.html"):
+    		open("/home/ubuntu/newspoc/index.html", "w").close() 
+	with open("/home/ubuntu/newspoc/index.html", "a") as index:
+		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a>\n")
+	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
+    # Write the components to the .html file separated by newlines (ok but a little more readable)
+	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
+		file.write("TO:\n"+str(to)+"\n")
+		file.write("SENDER:\n"+str(sender)+"\n")
+		file.write("SUBJECT:\n"+str(subject)+"\n")
+		for attachment in attachments:
+			if not attachment == None:
+				file.write("<a href='/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/attachment-"+attachment[2]+"'>ATTACHMENT: "+attachment[2]+"</a>\n")
+		if not mailhtml == None:
+			file.write("HTML:\n"+mailhtml+"\n")
+		if not mailplain == None:
+			file.write("PLAINTEXT:\n"+mailplain+"\n")
+	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".html"
+	for attachment in attachments:
+		with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/attachment-"+attachment[2],"w") as file:
+			file.write(attachment[2])
+		print "Wrote attachment"+attachment[2]
+    # Write the components to the .json file, better for processing later but doesn't solve encoding
+	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
+		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachments}))
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
-
-
-#Start the inbox.py server on our local ip address
+# Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)

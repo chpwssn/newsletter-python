@@ -5,6 +5,7 @@ import asyncore
 import argparse
 from email.parser import Parser
 from email.Header import decode_header
+from email.message import Message
 
 from logbook import Logger
 
@@ -23,17 +24,21 @@ class InboxServer(smtpd.SMTPServer, object):
         log.info('Collating message from {0}'.format(mailfrom))
         log.info('Length of message {0}'.format(len(data)))
         subject = self.parse_subject(Parser().parsestr(data)['subject'])
-        mail = None
+        mailplain = None
+        mailhtml = None
         attachments = []
         for part_of_mail in Parser().parsestr(data).walk():
-            attachment, mailcontent = self.parse_data(data)
-            if not mailcontent == None:
-                mail = mailcontent
-            else:
-                attachments.append(attachment)
+            mailcontent = self.parse_data(part_of_mail)
+            for mailpart in mailcontent:
+                if mailpart[0] == "application/octet-stream":
+                    attachment.append(mailpart)
+                elif mailpart[0] == "text/html":
+                    mailhtml = mailpart[1]
+                elif mailpart[0] == "text/plain":
+                    mailplain = mailpart[1]
         
-        log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments))
-        return self._handler(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, body = mailcontent, attachments = attachments)
+        log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments))
+        return self._handler(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments)
         
     def parse_subject(self, subject):
         # Decode subject if encoded
@@ -47,13 +52,17 @@ class InboxServer(smtpd.SMTPServer, object):
         subject = ''.join(subjectpart)
         return subject
         
-    def parse_data(self, data):
+    def parse_data(self, part_of_mail):
         # Check is part of mail is message or attachment
         # Decode support
-        attachment = None
-        mailcontent = None
+        mailcontent = []
         
-        return(attachment, mailcontent)
+        if part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain":
+            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True)])
+        elif part_of_mail.get_content_type() == "application/octet-stream":
+            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename()])
+        
+        return(mailcontent)
 
 
 class Inbox(object):
