@@ -27,7 +27,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	if not os.path.exists("/home/ubuntu/newspoc/index.html"):
 			open("/home/ubuntu/newspoc/index.html", "w").close() 
 	with open("/home/ubuntu/newspoc/index.html", "a") as index:
-		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a>\n")
+		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a><br/>\n")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
 	# Write the components to the .html file separated by newlines (ok but a little more readable)
 	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
@@ -36,7 +36,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		file.write("SUBJECT:\n"+str(subject)+"\n")
 		for attachment in attachments:
 			if not attachment == None:
-				file.write("<a href='/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/attachment-"+attachment[2]+"'>ATTACHMENT: "+attachment[2]+"</a>\n")
+				file.write("<a href='/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/attachment-"+attachment[2]+"'>ATTACHMENT: "+attachment[2]+"</a><br/>\n")
 		if not mailhtml == None:
 			file.write("HTML:\n"+mailhtml+"\n")
 		if not mailplain == None:
