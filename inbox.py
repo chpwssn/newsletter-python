@@ -30,7 +30,7 @@ class InboxServer(smtpd.SMTPServer, object):
         for part_of_mail in Parser().parsestr(data).walk():
             mailcontent = self.parse_data(part_of_mail)
             for mailpart in mailcontent:
-                if mailpart[0] == "application/octet-stream":
+                if not (mailpart[0] == "text/html" or mailpart[0] == "text/plain"):
                     attachments.append(mailpart)
                 elif mailpart[0] == "text/html":
                     mailhtml = mailpart[1]
@@ -59,7 +59,7 @@ class InboxServer(smtpd.SMTPServer, object):
         
         if part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain":
             mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True)])
-        elif part_of_mail.get_content_type() == "application/octet-stream":
+        elif part_of_mail.get_filename() and not (part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain"):
             mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename(), part_of_mail.get_payload()])
         
         return(mailcontent)
