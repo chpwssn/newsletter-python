@@ -45,7 +45,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	#Check to see if the directory we are going to write to exists
 	directoryName = sender+"-"+subject+"-"+str(int(timenow))
 	if not os.path.isdir("/home/ubuntu/newspoc/"+directoryName):
-		os.makedirs(directoryName)
+		os.makedirs("/home/ubuntu/newspoc/"+directoryName)
 	for attachment in attachments:
 		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[2],"w") as file:
 			file.write(attachment[2])
