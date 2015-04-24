@@ -60,6 +60,8 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	# Write the html body to a html file by itself
 	with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
 		mailhtmlfile.write(mailhtml)
+    with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.html","w") as mailplainfile:
+        mailplainfile.write(mailplain)
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
