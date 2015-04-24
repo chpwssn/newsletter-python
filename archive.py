@@ -24,8 +24,6 @@ attachmentsjson = []
 @inbox.collate
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
-	#remove special characters from the subject for now since it messes with the directory stuff
-	subject = replaceSpecials(subject)
 	# Write new mails to index.html
 	if not os.path.exists(baseDirectory+"index.html"):
 			open(baseDirectory+"index.html", "w").close()
@@ -66,7 +64,4 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
 
-def replaceSpecials(string):
-	p = re.compile( '[!@#$%^&*()?><]')
-	return p.subn( '', string)[0]
 
