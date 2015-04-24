@@ -49,7 +49,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		os.makedirs(baseDirectory+directoryName)
 	with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
 		messageindex.write("<html><a href='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>&nbsp;")
-        messageindex.write("Attachments:$nbsp")
+		messageindex.write("Attachments:$nbsp")
 		for attachment in attachments:
 			with open(baseDirectory+directoryName+"/attachment-"+attachment[2],"w") as file:
 				file.write(attachment[1])
