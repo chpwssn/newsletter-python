@@ -48,22 +48,22 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	if not os.path.isdir(baseDirectory+directoryName):
 		os.makedirs(baseDirectory+directoryName)
 	with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
-		messageindex.write("<html><a href='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>")
+		messageindex.write("<html><a href='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>&nbsp;")
 		for attachment in attachments:
 			with open(baseDirectory+directoryName+"/attachment-"+attachment[2],"w") as file:
 				file.write(attachment[1])
-			messageindex.write("<a href='"+baseDirectory+directoryName+"/attachment-"+attachment[2]+"'>"+attachment[2]+"</a>")
+			messageindex.write("<a href='"+"attachment-"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
 			print "Wrote attachment"+attachment[2]
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
 		# Write the components to the .json file, better for processing later but doesn't solve encoding
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
+		with open(sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 		# Write the html body to a html file by itself
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
+		with open(sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
 			mailhtmlfile.write(mailhtml)
 			messageindex.write("<iframe style='width:100%;height:45%'  src='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html'></iframe><br/>")
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt","w") as mailplainfile:
+		with open(sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt","w") as mailplainfile:
 			mailplainfile.write(mailplain)
 			messageindex.write("<iframe style='width:100%;height:45%'  src='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt'></iframe><br/>")
 		print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
