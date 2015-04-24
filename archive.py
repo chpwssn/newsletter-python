@@ -48,7 +48,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	if not os.path.isdir(baseDirectory+directoryName):
 		os.makedirs(baseDirectory+directoryName)
 	with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
-		messageindex.write("<html><a href='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>&nbsp;")
+		messageindex.write("<html><a href='"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>&nbsp;")
 		messageindex.write("Attachments:&nbsp;")
 		for attachment in attachments:
 			with open(baseDirectory+directoryName+"/attachment-"+attachment[2],"w") as file:
@@ -58,7 +58,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
 		# Write the components to the .json file, better for processing later but doesn't solve encoding
-		with open(sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
+		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 		# Write the html body to a html file by itself
 		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
