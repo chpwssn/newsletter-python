@@ -60,12 +60,12 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		with open(sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 		# Write the html body to a html file by itself
-		with open(sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
+		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
 			mailhtmlfile.write(mailhtml)
-			messageindex.write("<iframe style='width:100%;height:45%'  src='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html'></iframe><br/>")
-		with open(sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt","w") as mailplainfile:
+			messageindex.write("<iframe style='width:100%;height:45%'  src='"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html'></iframe><br/>")
+		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt","w") as mailplainfile:
 			mailplainfile.write(mailplain)
-			messageindex.write("<iframe style='width:100%;height:45%'  src='"+baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt'></iframe><br/>")
+			messageindex.write("<iframe style='width:100%;height:45%'  src='"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt'></iframe><br/>")
 		print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
