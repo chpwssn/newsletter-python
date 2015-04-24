@@ -25,13 +25,13 @@ attachmentsjson = []
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	# Write new mails to index.html
-	if not os.path.exists("/home/ubuntu/newspoc/index.html"):
-			open("/home/ubuntu/newspoc/index.html", "w").close() 
-	with open("/home/ubuntu/newspoc/index.html", "a") as index:
+	if not os.path.exists(baseDirectory+"index.html"):
+			open(baseDirectory+"index.html", "w").close()
+	with open(baseDirectory+"index.html", "a") as index:
 		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a><br/>\n")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
 	# Write the components to the .html file separated by newlines (ok but a little more readable)
-	with open("/home/ubuntu/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
+	with open(baseDirectory+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
 		file.write("TO:\n"+str(to)+"\n")
 		file.write("SENDER:\n"+str(sender)+"\n")
 		file.write("SUBJECT:\n"+str(subject)+"\n")
@@ -45,15 +45,17 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".html"
 	#Check to see if the directory we are going to write to exists
 	directoryName = sender+"-"+subject+"-"+str(int(timenow))
-	if not os.path.isdir("/home/ubuntu/newspoc/"+directoryName):
-		os.makedirs("/home/ubuntu/newspoc/"+directoryName)
+	if not os.path.isdir(baseDirectory+directoryName):
+		os.makedirs(baseDirectory+directoryName)
+#with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
+		#messageindex.write("<html>")
 	for attachment in attachments:
-		with open("/home/ubuntu/newspoc/"+directoryName+"/attachment-"+attachment[2],"w") as file:
+		with open(baseDirectory+directoryName+"/attachment-"+attachment[2],"w") as file:
 			file.write(attachment[1])
 		print "Wrote attachment"+attachment[2]
 		attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 	# Write the components to the .json file, better for processing later but doesn't solve encoding
-	with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
+	with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 		jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 	# Write the html body to a html file by itself
 #with open("/home/ubuntu/newspoc/"+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+"-mailhtml.html","w") as mailhtmlfile:
