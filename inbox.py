@@ -22,8 +22,11 @@ class InboxServer(smtpd.SMTPServer, object):
 
     def process_message(self, peer, mailfrom, rcpttos, data):
         log.info('Collating message from {0}'.format(mailfrom))
+        log.info('Collating message to {0}'.format(rcpttos))
         log.info('Length of message {0}'.format(len(data)))
         subject = self.parse_subject(Parser().parsestr(data)['subject'])
+        sender = parseaddr(Parser().parsestr(data).get('From'))[1]
+        sentto = parseaddr(Parser().parsestr(data).get('To'))[1]
         mailplain = None
         mailhtml = None
         attachments = []
@@ -38,7 +41,7 @@ class InboxServer(smtpd.SMTPServer, object):
                     mailplain = mailpart[1]
         
         log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments))
-        return self._handler(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments)
+        return self._handler(rawdata=data, to = sentto, sender = sender, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments)
         
     def parse_subject(self, subject):
         # Decode subject if encoded
