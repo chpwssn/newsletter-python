@@ -30,10 +30,10 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
 			startnum = 0
 			while True:
-				if os.path.exists(baseDirectory+"index.html-"+startnum):
+				if os.path.exists(baseDirectory+"index.html-old-"+startnum):
 					startnum = startnum + 1
 				else:
-					os.rename(baseDirectory+"index.html", baseDirectory+"index.html-"+startnum)
+					os.rename(baseDirectory+"index.html", baseDirectory+"index.html-old-"+startnum)
 					break
 	if not os.path.exists(baseDirectory+"index.html"):
 		with open(baseDirectory+"index.html", "w") as mainindex:
