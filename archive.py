@@ -43,12 +43,16 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 			mainindex.write('</tr></table>')
 			mainindex.write("</body></html>")
 	open(baseDirectory+"index.html-temp", "w").close()
-	for text in open(baseDirectory+"index.html"):
+	basedir = open(baseDirectory+"index.html")
+	basedirtemp = open(baseDirectory+"index.html-temp", "a")
+	for text in basedir:
 		if '<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">' in text:
 			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+str(int(timenow))+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+sender+'-'+subject+'-'+str(int(timenow))+'">'+subject+'</a></td><td class="table-a">'+len(rawdata)+'</td>')
 		else:
 			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+str(int(timenow))+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+sender+'-'+subject+'-'+str(int(timenow))+'">'+subject+'</a></td><td class="table-b">'+len(rawdata)+'</td>')
-		open(baseDirectory+"index.html-temp", "a").write(text).close()
+		basedirtemp.write(text)
+	basedir.close()
+	basedirtemp.close()
 	os.remove(baseDirectory+"index.html")
 	os.rename(baseDirectory+"index.html-temp", baseDirectory+"index.html")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
