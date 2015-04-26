@@ -68,7 +68,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 				os.makedirs(baseDirectory+directoryName+"/attachments")
 			with open(baseDirectory+directoryName+"/attachments/"+attachment[2],"w") as file:
 				file.write(attachment[1])
-			messageindex.write("<a href='/attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
+			messageindex.write("<a href='attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
 			print "Wrote attachment "+attachment[2]
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
