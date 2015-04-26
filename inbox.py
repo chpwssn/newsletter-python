@@ -6,6 +6,7 @@ import argparse
 from email.parser import Parser
 from email.Header import decode_header
 from email.message import Message
+from email.utils import parseaddr
 
 from logbook import Logger
 
