@@ -40,7 +40,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+str(int(timenow))+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+sender+'-'+subject+'-'+str(int(timenow))+'">'+subject+'</a></td><td class="table-a">'+len(rawdata)+'</td>')
 		else:
 			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+str(int(timenow))+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+sender+'-'+subject+'-'+str(int(timenow))+'">'+subject+'</a></td><td class="table-b">'+len(rawdata)+'</td>')
-		open(baseDirectory+"index.html-temp", "a").write(text+"\n").close()
+		open(baseDirectory+"index.html-temp", "a").write(text).close()
 	os.remove(baseDirectory+"index.html")
 	os.rename(baseDirectory+"index.html-temp", baseDirectory+"index.html")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
