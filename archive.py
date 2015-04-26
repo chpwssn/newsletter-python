@@ -26,8 +26,18 @@ attachmentsjson = []
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	# Write new mails to index.html
+	if os.path.exists(baseDirectory+"index.html"):
+		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
+			startnum = 0
+			while True:
+				if os.path.exists(baseDirectory+"index.html-"+startnum):
+					startnum = startnum + 1
+				else:
+					os.rename(baseDirectory+"index.html", baseDirectory+"index.html-"+startnum)
+					break
 	if not os.path.exists(baseDirectory+"index.html"):
 		with open(baseDirectory+"index.html", "w") as mainindex:
+			mainindex.write('<!--TABLE VERSION-->')
 			mainindex.write("<html><head><title>Newsletter Archive (WIP)</title></head><body>")
 			mainindex.write('<style type="text/css">.table {border-collapse:collapse;border-spacing:0}.table td{padding:10px 5px;border-style:solid;border-width:0px;word-break:normal;background-color:#E6E6E6;border-top-width:1px;border-bottom-width:1px;}.table th{padding:10px 5px;border-style:solid;border-width:0px;word-break:normal;background-color:#BDBDBD;border-top-width:1px;border-bottom-width:1px;}.table .table-b{background-color:C1C1C1}')
 			mainindex.write('</style><table class="table"><tr><th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>')
