@@ -48,9 +48,9 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	basedirtemp = open(baseDirectory+"index.html-temp", "a")
 	for text in basedir:
 		if '<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">' in text:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+timereceived+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+sender+'-'+subject+'-'+timereceived+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+timereceived+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
 		else:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+timereceived+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+sender+'-'+subject+'-'+timereceived+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+timereceived+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
 		basedirtemp.write(text)
 	basedir.close()
 	basedirtemp.close()
