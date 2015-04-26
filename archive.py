@@ -24,7 +24,8 @@ attachmentsjson = []
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	# Write new mails to index.html
-	
+	timereceived = str(int(time.time()))
+	directoryName = timereceived
 	if os.path.exists(baseDirectory+"index.html"):
 		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
 			startnum = 0
@@ -47,25 +48,24 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	basedirtemp = open(baseDirectory+"index.html-temp", "a")
 	for text in basedir:
 		if '<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">' in text:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+str(int(time.time()))+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+sender+'-'+subject+'-'+str(int(time.time()))+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+timereceived+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+sender+'-'+subject+'-'+timereceived+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
 		else:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+str(int(time.time()))+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+sender+'-'+subject+'-'+str(int(time.time()))+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+timereceived+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+sender+'-'+subject+'-'+timereceived+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
 		basedirtemp.write(text)
 	basedir.close()
 	basedirtemp.close()
 	os.remove(baseDirectory+"index.html")
 	os.rename(baseDirectory+"index.html-temp", baseDirectory+"index.html")
-	print "Added "+sender+"-"+subject+"-"+str(int(time.time()))+" to index.html"
+	print "Added "+directoryName+" to index.html"
 	#Check to see if the directory we are going to write to exists
-	directoryName = sender+"-"+subject+"-"+str(int(time.time()))
 	if not os.path.isdir(baseDirectory+directoryName):
 		os.makedirs(baseDirectory+directoryName)
 	with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
-		messageindex.write("<html><head><title>"+sender+"-"+subject+"-"+str(int(time.time()))+"</title></head><body>ALL DATA:&nbsp;<a href='"+sender+"-"+subject+"-"+str(int(time.time()))+".json"+"'>JSON</a><br/>")
+		messageindex.write("<html><head><title>"+directoryName+"</title></head><body>ALL DATA:&nbsp;<a href='"+directoryName+".json"+"'>JSON</a><br/>")
 		messageindex.write("ATTACHMENT(S):&nbsp;")
 		for attachment in attachments:
-			if not os.path.isdir(baseDirectory+directoryName+"/attachments):
-				os.makedirs(baseDirectory+directoryName+"/attachments)
+			if not os.path.isdir(baseDirectory+directoryName+"/attachments"):
+				os.makedirs(baseDirectory+directoryName+"/attachments")
 			with open(baseDirectory+directoryName+"/attachments/"+attachment[2],"w") as file:
 				file.write(attachment[1])
 			messageindex.write("<a href='/attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
@@ -76,16 +76,16 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		messageindex.write("FROM:&nbsp;"+sender+"<br/>")
 		messageindex.write("SUBJECT:&nbsp;"+subject+"<br/>")
 		# Write the components to the .json file, better for processing later but doesn't solve encoding
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(time.time()))+".json","w") as jsonfile:
+		with open(baseDirectory+directoryName+"/"+directoryName+".json","w") as jsonfile:
 			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
 		# Write the html body to a html file by itself
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(time.time()))+"-mailhtml.html","w") as mailhtmlfile:
+		with open(baseDirectory+directoryName+"/"+directoryName+"-mailhtml.html","w") as mailhtmlfile:
 			mailhtmlfile.write(mailhtml)
-			messageindex.write("<iframe style='width:100%;height:45%'  src='"+sender+"-"+subject+"-"+str(int(time.time()))+"-mailhtml.html'></iframe><br/>")
-		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(time.time()))+"-mailplain.txt","w") as mailplainfile:
+			messageindex.write("<iframe style='width:100%;height:45%'  src='"+directoryName+"-mailhtml.html'></iframe><br/>")
+		with open(baseDirectory+directoryName+"/"+directoryName+"-mailplain.txt","w") as mailplainfile:
 			mailplainfile.write(mailplain)
-			messageindex.write("<iframe style='width:100%;height:45%'  src='"+sender+"-"+subject+"-"+str(int(time.time()))+"-mailplain.txt'></iframe><br/>")
-		print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
+			messageindex.write("<iframe style='width:100%;height:45%'  src='"+directoryName+"-mailplain.txt'></iframe><br/>")
+		print "Wrote "+directoryName+".json"
 		messageindex.write("</body></html>")
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
