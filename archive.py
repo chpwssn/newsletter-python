@@ -1,15 +1,15 @@
-# Project Newsletter Python Proof of Concept
-# original inbox.py project by kennethreitz archive.py by chip v 0.0000001
-#
-# Basic idea:
-# inbox.py instantiates a standalone mail server based in python and calls the handle function
-# when it receives a new message. We then "handle" the message by saving it's text to a .txt file
-# and a .json blob file.
-#
-# Todo:
-# Handle encoding better
-# Figure out how to handle attachments
-# Stability and watchdogs
+'''
+Project Newsletter
+
+Scripts created by Arkiver and chpwssn (Chip Wasson)
+
+Todo:
+Categories for receiver mail account. Example: add category "tweakers" if mail received on tweakers@mail.com
+Automatic update
+Stability and watchdogs
+DONE Handle encoding better
+DONE STABLE Figure out how to handle attachments
+'''
 
 from inbox import Inbox
 from config import *
