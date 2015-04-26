@@ -15,7 +15,6 @@ from inbox import Inbox
 from config import *
 import time,json
 import os
-import re
 
 # Create the inbox.py object
 inbox = Inbox()
