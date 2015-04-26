@@ -30,33 +30,23 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	with open(baseDirectory+"index.html", "a") as index:
 		index.write("<a href='"+sender+"-"+subject+"-"+str(int(timenow))+"'>"+sender+"-"+subject+"-"+str(int(timenow))+"</a><br/>\n")
 	print "Added "+sender+"-"+subject+"-"+str(int(timenow))+" to index.html"
-	# Write the components to the .html file separated by newlines (ok but a little more readable)
-	with open(baseDirectory+sender+"-"+subject+"-"+str(int(timenow))+".html","w") as file:
-		file.write("TO:\n"+str(to)+"\n")
-		file.write("SENDER:\n"+str(sender)+"\n")
-		file.write("SUBJECT:\n"+str(subject)+"\n")
-		for attachment in attachments:
-			if not attachment == None:
-				file.write("<a href='/newspoc/"+sender+"-"+subject+"-"+str(int(timenow))+"/attachment-"+attachment[2]+"'>ATTACHMENT: "+attachment[2]+"</a><br/>\n")
-		if not mailhtml == None:
-			file.write("HTML:\n"+mailhtml+"\n")
-		if not mailplain == None:
-			file.write("PLAINTEXT:\n"+mailplain+"\n")
-	print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".html"
 	#Check to see if the directory we are going to write to exists
 	directoryName = sender+"-"+subject+"-"+str(int(timenow))
 	if not os.path.isdir(baseDirectory+directoryName):
 		os.makedirs(baseDirectory+directoryName)
 	with open(baseDirectory+directoryName+"/index.html","w") as messageindex:
-		messageindex.write("<html><a href='"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a>&nbsp;")
-		messageindex.write("Attachments:&nbsp;")
+		messageindex.write("<html><head><title>"+sender+"-"+subject+"-"+str(int(timenow))+"</title></head><body>ALL DATA:&nbsp;<a href='"+sender+"-"+subject+"-"+str(int(timenow))+".json"+"'>JSON</a><br/>")
+		messageindex.write("ATTACHMENT(S):&nbsp;")
 		for attachment in attachments:
-			with open(baseDirectory+directoryName+"/attachment-"+attachment[2],"w") as file:
+			with open(baseDirectory+directoryName+"/attachments/"+attachment[2],"w") as file:
 				file.write(attachment[1])
-			messageindex.write("<a href='"+"attachment-"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
-			print "Wrote attachment"+attachment[2]
+			messageindex.write("<a href='"+"attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
+			print "Wrote attachment "+attachment[2]
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
+		messageindex.write("TO:&nbsp;"+to+"<br/>")
+		messageindex.write("FROM:&nbsp;"+sender+"<br/>")
+		messageindex.write("SUBJECT:&nbsp;"+subject+"<br/>")
 		# Write the components to the .json file, better for processing later but doesn't solve encoding
 		with open(baseDirectory+directoryName+"/"+sender+"-"+subject+"-"+str(int(timenow))+".json","w") as jsonfile:
 			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
@@ -68,6 +58,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 			mailplainfile.write(mailplain)
 			messageindex.write("<iframe style='width:100%;height:45%'  src='"+sender+"-"+subject+"-"+str(int(timenow))+"-mailplain.txt'></iframe><br/>")
 		print "Wrote "+sender+"-"+subject+"-"+str(int(time.time()))+".json"
+		messageindex.write("</body></html>")
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
 
