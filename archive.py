@@ -24,6 +24,7 @@ attachmentsjson = []
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 	# Write new mails to index.html
+	
 	if os.path.exists(baseDirectory+"index.html"):
 		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
 			startnum = 0
@@ -63,9 +64,11 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
 		messageindex.write("<html><head><title>"+sender+"-"+subject+"-"+str(int(time.time()))+"</title></head><body>ALL DATA:&nbsp;<a href='"+sender+"-"+subject+"-"+str(int(time.time()))+".json"+"'>JSON</a><br/>")
 		messageindex.write("ATTACHMENT(S):&nbsp;")
 		for attachment in attachments:
+			if not os.path.isdir(baseDirectory+directoryName+"/attachments):
+				os.makedirs(baseDirectory+directoryName+"/attachments)
 			with open(baseDirectory+directoryName+"/attachments/"+attachment[2],"w") as file:
 				file.write(attachment[1])
-			messageindex.write("<a href='"+"attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
+			messageindex.write("<a href='/attachments/"+attachment[2]+"'>"+attachment[2]+"</a>&nbsp;")
 			print "Wrote attachment "+attachment[2]
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
