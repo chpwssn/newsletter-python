@@ -15,6 +15,7 @@ from inbox import Inbox
 from config import *
 import time,json
 import os
+import datetime
 
 # Create the inbox.py object
 inbox = Inbox()
@@ -26,6 +27,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	# Write new mails to index.html
 	timereceived = str(int(time.time()))
 	directoryName = timereceived
+	humantime = datetime.datetime.fromtimestamp(int(timereceived)).strftime('%Y-%m-%d %H:%M:%S')
 	if os.path.exists(baseDirectory+"index.html"):
 		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
 			startnum = 0
@@ -48,9 +50,9 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	basedirtemp = open(baseDirectory+"index.html-temp", "a")
 	for text in basedir:
 		if '<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">' in text:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+timereceived+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+humantime+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
 		else:
-			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+timereceived+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
+			text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+humantime+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
 		basedirtemp.write(text)
 	basedir.close()
 	basedirtemp.close()
@@ -72,12 +74,13 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 			print "Wrote attachment "+attachment[2]
 			attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 		messageindex.write("<br/>")
-		messageindex.write("TO:&nbsp;"+to+"<br/>")
-		messageindex.write("FROM:&nbsp;"+sender+"<br/>")
+		messageindex.write("TO:&nbsp;"+toname+"&nbsp;"+to+"<br/>")
+		messageindex.write("FROM:&nbsp;"+sendername+"&nbsp;"+sender+"<br/>")
 		messageindex.write("SUBJECT:&nbsp;"+subject+"<br/>")
+		messageindex.write("DATE:&nbsp;"+humantime+"<br/>")
 		# Write the components to the .json file, better for processing later but doesn't solve encoding
 		with open(baseDirectory+directoryName+"/"+directoryName+".json","w") as jsonfile:
-			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson}))
+			jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson, "toname":toname, "sendername":sendername}))
 		# Write the html body to a html file by itself
 		with open(baseDirectory+directoryName+"/"+directoryName+"-mailhtml.html","w") as mailhtmlfile:
 			mailhtmlfile.write(mailhtml)
