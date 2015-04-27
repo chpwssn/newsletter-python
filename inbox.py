@@ -27,7 +27,9 @@ class InboxServer(smtpd.SMTPServer, object):
         log.info('Length of message {0}'.format(len(data)))
         subject = self.parse_subject(Parser().parsestr(data)['subject'])
         sender = parseaddr(Parser().parsestr(data).get('From'))[1]
+        sendername = parseaddr(Parser().parsestr(data).get('From'))[0]
         sentto = parseaddr(Parser().parsestr(data).get('To'))[1]
+        senttoname = parseaddr(Parser().parsestr(data).get('To'))[0]
         mailplain = None
         mailhtml = None
         attachments = []
@@ -41,8 +43,8 @@ class InboxServer(smtpd.SMTPServer, object):
                 elif mailpart[0] == "text/plain":
                     mailplain = mailpart[1]
         
-        log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments))
-        return self._handler(rawdata=data, to = sentto, sender = sender, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments)
+        log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments, toname = senttoname, sendername = sendername))
+        return self._handler(rawdata=data, to = sentto, sender = sender, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments, toname = senttoname, sendername = sendername)
         
     def parse_subject(self, subject):
         # Decode subject if encoded
@@ -62,7 +64,7 @@ class InboxServer(smtpd.SMTPServer, object):
         mailcontent = []
         
         if part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain":
-            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True)])
+            mailcontent.append([part_of_mail.get_content_type(), unicode(part_of_mail.get_payload(decode=True), part_of_mail.get_content_charset(), 'replace').encode('utf8', 'replace')])
         elif part_of_mail.get_filename() and not (part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain"):
             mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename(), part_of_mail.get_payload()])
         
