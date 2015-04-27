@@ -22,7 +22,7 @@ attachmentsjson = []
 
 @inbox.collate
 # Our message handling function
-def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments):
+def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, toname, sendername):
 	# Write new mails to index.html
 	timereceived = str(int(time.time()))
 	directoryName = timereceived
