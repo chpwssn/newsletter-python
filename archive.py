@@ -29,6 +29,9 @@ newmails = False
 @inbox.collate
 # Our message handling function
 def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, toname, sendername):
+	global newindex
+	global command
+	global newmails
 	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
 		if mailplain == "create new index.html":
 			newindex = True
