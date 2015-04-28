@@ -37,7 +37,6 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 			newindex = True
 			newmails = True
 			command = True
-		elif mailplain
 	if newindex == True:
 		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
 			startnum = 0
