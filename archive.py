@@ -17,6 +17,7 @@ from config import *
 import time,json
 import os
 import datetime
+import shutil
 
 # Create the inbox.py object
 inbox = Inbox()
@@ -33,22 +34,34 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	global command
 	global newmails
 	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
-		if mailplain == "create new index.html":
+		if subject == "create new index.html":
 			newindex = True
 			command = True
-		elif mailplain == "create new index.html and new mails":
-			newindex = True
+		elif subject == "create new index.html and new mails":
 			newmails = True
 			command = True
+		elif subject == "update scripts":
+			updatescripts = True
+			command = True
 	if newindex == True:
-		if not '<!--TABLE VERSION-->' in open(baseDirectory+"index.html").read():
-			startnum = 0
-			while True:
-				if os.path.exists(baseDirectory+"index.html-old-"+str(startnum)):
-					startnum = int(startnum) + 1
-				else:
-					os.rename(baseDirectory+"index.html", baseDirectory+"index.html-old-"+str(startnum))
-					break
+		startnum = 0
+		while True:
+			if os.path.exists(baseDirectory+"!index.html-old-"+str(startnum)):
+				startnum = int(startnum) + 1
+			else:
+				os.rename(baseDirectory+"index.html", baseDirectory+"!index.html-old-"+str(startnum))
+				break
+	if newmails == True:
+		startnum = 0
+		while True:
+			if os.path.isdir(baseDirectory+"!old-"+str(startnum)):
+				startnum = int(startnum) + 1
+			else:
+				os.makedirs(baseDirectory+"!old-"+str(startnum))
+				shutil.copytree(baseDirectory, baseDirectory+"!old-"+str(startnum), ignore=shutil.ignore_patterns('!old-*'))
+				break
+#	if updatescripts == True:
+#		
 	if command == False:
 		# Write new mails to index.html
 		timereceived = str(int(time.time()))
