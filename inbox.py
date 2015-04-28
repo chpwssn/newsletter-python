@@ -25,11 +25,11 @@ class InboxServer(smtpd.SMTPServer, object):
         log.info('Collating message from {0}'.format(mailfrom))
         log.info('Collating message to {0}'.format(rcpttos))
         log.info('Length of message {0}'.format(len(data)))
-        subject = self.parse_subject(Parser().parsestr(data)['subject']).decode('utf-8')
-        sender = parseaddr(Parser().parsestr(data).get('From'))[1].decode('utf-8')
-        sendername = parseaddr(Parser().parsestr(data).get('From'))[0].decode('utf-8')
-        sentto = parseaddr(Parser().parsestr(data).get('To'))[1].decode('utf-8')
-        senttoname = parseaddr(Parser().parsestr(data).get('To'))[0].decode('utf-8')
+        subject = self.parse_subject(Parser().parsestr(data)['subject'])
+        sender = parseaddr(Parser().parsestr(data).get('From'))[1]
+        sendername = parseaddr(Parser().parsestr(data).get('From'))[0]
+        sentto = parseaddr(Parser().parsestr(data).get('To'))[1]
+        senttoname = parseaddr(Parser().parsestr(data).get('To'))[0]
         mailplain = None
         mailhtml = None
         attachments = []
@@ -39,9 +39,9 @@ class InboxServer(smtpd.SMTPServer, object):
                 if not (mailpart[0] == "text/html" or mailpart[0] == "text/plain"):
                     attachments.append(mailpart)
                 elif mailpart[0] == "text/html":
-                    mailhtml = mailpart[1].decode('utf-8')
+                    mailhtml = mailpart[1]
                 elif mailpart[0] == "text/plain":
-                    mailplain = mailpart[1].decode('utf-8')
+                    mailplain = mailpart[1]
         
         log.debug(dict(rawdata=data, to = rcpttos, sender = mailfrom, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments, toname = senttoname, sendername = sendername))
         return self._handler(rawdata=data, to = sentto, sender = sender, subject = subject, mailhtml = mailhtml, mailplain = mailplain, attachments = attachments, toname = senttoname, sendername = sendername)
