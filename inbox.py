@@ -64,7 +64,7 @@ class InboxServer(smtpd.SMTPServer, object):
         mailcontent = []
         
         if part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain":
-            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True).decode('utf8')])
+            mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True)])
         elif part_of_mail.get_filename() and not (part_of_mail.get_content_type() == "text/html" or part_of_mail.get_content_type() == "text/plain"):
             mailcontent.append([part_of_mail.get_content_type(), part_of_mail.get_payload(decode=True), part_of_mail.get_filename(), part_of_mail.get_payload()])
         
