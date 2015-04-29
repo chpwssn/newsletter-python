@@ -83,10 +83,10 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 		basedirtemp = codecs.open(baseDirectory+"index.html-temp", "a", encoding="utf-8")
 		for text in basedir:
 			if '<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">' in text:
-				text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+humantime+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
+				text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>',u'<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-a">'+humantime+'</td><td class="table-a">'+sender+'</td><td class="table-a"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-a">'+str(len(rawdata))+'</td>')
 			else:
-				text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>','<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+humantime+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
-			basedirtemp.write(text)
+				text = text.replace('<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th>',u'<th class="table-a">DATE</th><th class="table-a">FROM</th><th class="table-a">SUBJECT</th><th class="table-a">LENGTH</th></tr><tr><td class="table-b">'+humantime+'</td><td class="table-b">'+sender+'</td><td class="table-b"><a href="'+directoryName+'">'+subject+'</a></td><td class="table-b">'+str(len(rawdata))+'</td>')
+			basedirtemp.write(text.decode('utf-8', 'ignore'))
 		basedir.close()
 		basedirtemp.close()
 		os.remove(baseDirectory+"index.html")
@@ -107,19 +107,19 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 				print "Wrote attachment "+attachment[2]
 				attachmentsjson.append([attachment[0], attachment[2], attachment[3]])
 			messageindex.write("<br/>")
-			messageindex.write("TO:&nbsp;"+toname+"&nbsp;"+to+"<br/>")
-			messageindex.write("FROM:&nbsp;"+sendername+"&nbsp;"+sender+"<br/>")
-			messageindex.write("SUBJECT:&nbsp;"+subject+"<br/>")
+			messageindex.write("TO:&nbsp;"+toname.decode('utf-8', 'ignore')+"&nbsp;"+to.decode('utf-8', 'ignore')+"<br/>")
+			messageindex.write("FROM:&nbsp;"+sendername.decode('utf-8', 'ignore')+"&nbsp;"+sender.decode('utf-8', 'ignore')+"<br/>")
+			messageindex.write("SUBJECT:&nbsp;"+subject.decode('utf-8', 'ignore')+"<br/>")
 			messageindex.write("DATE:&nbsp;"+humantime+"<br/>")
 			# Write the components to the .json file, better for processing later but doesn't solve encoding
 			with codecs.open(baseDirectory+directoryName+"/"+directoryName+".json", "w", encoding="utf-8") as jsonfile:
 				jsonfile.write(json.dumps({"rawdata":rawdata, "to":to, "sender":sender, "subject":subject, "mailhtml":mailhtml, "mailplain":mailplain, "attachments":attachmentsjson, "toname":toname, "sendername":sendername}, ensure_ascii=False))
 			# Write the html body to a html file by itself
 			with codecs.open(baseDirectory+directoryName+"/"+directoryName+"-mailhtml.html", "w", encoding="utf-8") as mailhtmlfile:
-				mailhtmlfile.write(mailhtml)
+				mailhtmlfile.write(mailhtml.decode('utf-8', 'ignore'))
 				messageindex.write("<iframe style='width:100%;height:45%'  src='"+directoryName+"-mailhtml.html'></iframe><br/>")
 			with codecs.open(baseDirectory+directoryName+"/"+directoryName+"-mailplain.txt", "w", encoding="utf-8") as mailplainfile:
-				mailplainfile.write(mailplain)
+				mailplainfile.write(mailplain.decode('utf-8', 'ignore'))
 				messageindex.write("<iframe style='width:100%;height:45%'  src='"+directoryName+"-mailplain.txt'></iframe><br/>")
 			print "Wrote "+directoryName+".json"
 			messageindex.write("</body></html>")
