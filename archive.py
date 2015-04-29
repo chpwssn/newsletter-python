@@ -36,33 +36,33 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	global command
 	global newmails
 	global updatescripts
-	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
-		if subject == "create new index.html":
-			newindex = True
-			command = True
-		elif subject == "create new index.html and new mails":
-			newmails = True
-			command = True
-		elif subject == "update scripts":
-			updatescripts = True
-			command = True
-	if newindex == True:
-		startnum = 0
-		while True:
-			if os.path.exists(baseDirectory+"!index.html-old-"+str(startnum)):
-				startnum = int(startnum) + 1
-			else:
-				os.rename(baseDirectory+"index.html", baseDirectory+"!index.html-old-"+str(startnum))
-				break
-	if newmails == True:
-		startnum = 0
-		while True:
-			if os.path.isdir(baseDirectory+"!old-"+str(startnum)):
-				startnum = int(startnum) + 1
-			else:
-				os.makedirs(baseDirectory+"!old-"+str(startnum))
-				shutil.copytree(baseDirectory, baseDirectory+"!old-"+str(startnum), ignore=shutil.ignore_patterns('!old-*'))
-				break
+#	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
+#		if subject == "create new index.html":
+#			newindex = True
+#			command = True
+#		elif subject == "create new index.html and new mails":
+#			newmails = True
+#			command = True
+#		elif subject == "update scripts":
+#			updatescripts = True
+#			command = True
+#	if newindex == True:
+#		startnum = 0
+#		while True:
+#			if os.path.exists(baseDirectory+"!index.html-old-"+str(startnum)):
+#				startnum = int(startnum) + 1
+#			else:
+#				os.rename(baseDirectory+"index.html", baseDirectory+"!index.html-old-"+str(startnum))
+#				break
+#	if newmails == True:
+#		startnum = 0
+#		while True:
+#			if os.path.isdir(baseDirectory+"!old-"+str(startnum)):
+#				startnum = int(startnum) + 1
+#			else:
+#				os.makedirs(baseDirectory+"!old-"+str(startnum))
+#				shutil.copytree(baseDirectory, baseDirectory+"!old-"+str(startnum), ignore=shutil.ignore_patterns('!old-*'))
+#				break
 #	if updatescripts == True:
 #		
 	if command == False:
