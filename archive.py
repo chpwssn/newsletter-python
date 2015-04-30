@@ -22,6 +22,7 @@ import sys
 import datetime
 import shutil
 import codecs
+import atexit
 
 # Create the inbox.py object
 inbox = Inbox()
@@ -50,7 +51,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 			updatescripts = True
 			command = True
 	if updatescripts == True:
-		os.system('update.py')
+		atexit.register(os.system('/update.sh'))
 		sys.exit()
 #	if newindex == True:
 #		startnum = 0
