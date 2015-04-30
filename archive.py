@@ -18,6 +18,7 @@ from inbox import Inbox
 from config import *
 import time,json
 import os
+import sys
 import datetime
 import shutil
 import codecs
@@ -38,16 +39,19 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	global command
 	global newmails
 	global updatescripts
-#	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
-#		if subject == "create new index.html":
-#			newindex = True
-#			command = True
-#		elif subject == "create new index.html and new mails":
-#			newmails = True
-#			command = True
-#		elif subject == "update scripts":
-#			updatescripts = True
-#			command = True
+	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
+		if subject == "create new index.html":
+			newindex = True
+			command = True
+		elif subject == "create new index.html and new mails":
+			newmails = True
+			command = True
+		elif subject == "update scripts":
+			updatescripts = True
+			command = True
+	if updatescripts == True:
+		os.system('update.py')
+		sys.exit()
 #	if newindex == True:
 #		startnum = 0
 #		while True:
