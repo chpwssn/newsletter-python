@@ -8,3 +8,4 @@ touch log.txt
 chmod 777 log.txt
 echo "Log rotated to .$CURLOG"
 git pull
+python archive.py
