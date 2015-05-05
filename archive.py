@@ -16,6 +16,7 @@ DONE STABLE Figure out how to handle attachments
 
 from inbox import Inbox
 from config import *
+from bot import *
 import time,json
 import os
 import sys
@@ -24,9 +25,15 @@ import shutil
 import codecs
 import atexit
 
+#create the IRC bot
+bot = IRCBot()
+bot.start()
+
 # Create the inbox.py object
-inbox = Inbox()
+inbox = Inbox(bot)
 attachmentsjson = []
+
+
 
 command = False
 newindex = False
@@ -42,15 +49,19 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 	global updatescripts
 	if sender == "arkiver@hotmail.com" or sender == "chpwssn@gmail.com":
 		if subject == "create new index.html":
+			bot.sendmsg("New index.html requested by "+sender)
 			newindex = True
 			command = True
 		elif subject == "create new index.html and new mails":
+			bot.sendmsg("New index.html and new mails requested by "+sender)
 			newmails = True
 			command = True
 		elif subject == "update scripts":
+			bot.sendmsg("Update requested by "+sender)
 			updatescripts = True
 			command = True
 	if updatescripts == True:
+		bot.sendmsg("Running Update Scripts...")
 		atexit.register(os.system('/update.sh'))
 		sys.exit()
 #	if newindex == True:
@@ -99,6 +110,7 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 		os.remove(baseDirectory+"index.html")
 		os.rename(baseDirectory+"index.html-temp", baseDirectory+"index.html")
 		print "Added "+directoryName+" to index.html"
+		bot.sendmsg("Added "+directoryName+" to index.html")
 		#Check to see if the directory we are going to write to exists
 		if not os.path.isdir(baseDirectory+directoryName):
 			os.makedirs(baseDirectory+directoryName)
@@ -129,7 +141,10 @@ def handle(rawdata, to, sender, subject, mailhtml, mailplain, attachments, tonam
 				mailplainfile.write(mailplain.decode('utf-8', 'ignore'))
 				messageindex.write("<iframe style='width:100%;height:45%'  src='"+directoryName+"-mailplain.txt'></iframe><br/>")
 			print "Wrote "+directoryName+".json"
+			bot.sendmsg("Available at "+htmlBase+directoryName)
 			messageindex.write("</body></html>")
+
+
 # Start the inbox.py server on our local ip address
 inbox.serve(address=localIPAddress, port=25)
 

@@ -8,6 +8,7 @@ from email.Header import decode_header
 from email.message import Message
 from email.utils import parseaddr
 
+
 from logbook import Logger
 
 
@@ -17,11 +18,15 @@ log = Logger(__name__)
 class InboxServer(smtpd.SMTPServer, object):
     """Logging-enabled SMTPServer instance with handler support."""
 
-    def __init__(self, handler, *args, **kwargs):
+    def __init__(self, bot, handler, *args, **kwargs):
         super(InboxServer, self).__init__(*args, **kwargs)
         self._handler = handler
+        self._bot = bot
 
     def process_message(self, peer, mailfrom, rcpttos, data):
+        self._bot.sendmsg('Collating message from {0}'.format(mailfrom))
+        self._bot.sendmsg('Collating message to {0}'.format(rcpttos))
+        self._bot.sendmsg('Length of message {0}'.format(len(data)))
         log.info('Collating message from {0}'.format(mailfrom))
         log.info('Collating message to {0}'.format(rcpttos))
         log.info('Length of message {0}'.format(len(data)))
@@ -74,10 +79,11 @@ class InboxServer(smtpd.SMTPServer, object):
 class Inbox(object):
     """A simple SMTP Inbox."""
 
-    def __init__(self, port=None, address=None):
+    def __init__(self, bot, port=None, address=None):
         self.port = port
         self.address = address
         self.collator = None
+        self._bot = bot
 
     def collate(self, collator):
         """Function decorator. Used to specify inbox handler."""
@@ -91,7 +97,7 @@ class Inbox(object):
 
         log.info('Starting SMTP server at {0}:{1}'.format(address, port))
 
-        server = InboxServer(self.collator, (address, port), None)
+        server = InboxServer(self._bot, self.collator, (address, port), None)
 
         try:
             asyncore.loop()
