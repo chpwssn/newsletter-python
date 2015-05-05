@@ -25,9 +25,10 @@ class IRCBot ( threading.Thread ):
                 line=line.rstrip()
                 line=line.split()
             if 'PING' in line:
-                print "PONGING"
+                line = line.split(':')
+                print "PONGING"+line[1]
                 self.s.send('PONG '+line[1]+'\n')
-                self.sendmsg("Pong")
+                #self.sendmsg("Pong")
 
     def sendmsg(self, message):
         self.s.send("PRIVMSG "+CHANNELINIT+" :"+message+"\n")
