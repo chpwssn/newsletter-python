@@ -1,46 +1,28 @@
-Modified from kennethreitz's inbox.py for use for ArchiveTeam Project Newsletter
+#ArchiveTeam Project Newsletter Mail Server
 
-Original README:
+#Getting Started
 
-Inbox.py: SMTP Server for Humans
-================================
+##Debian Based Quickstart
+    apt-get update;
+    apt-get -y upgrade;
+    apt-get -y install git python python-dev python-pip tmux;
+    git clone https://github.com/chpwssn/newsletter-python.git;
+    cd newsletter-python/;
+    git fetch;
+    git checkout chip-dev-irc;
+    cp config-example.py config.py;
+    vi config.py; #set localIPAddress, localIPAddress and htmlBase
+    cp botconfig-example.py botconfig.py;
+    vi botconfig.py; #update bot configs
+    tmux new -s news -d "";
+    tmux a -t news
 
-This is the simplest SMTP server you'll ever see. It's asynchronous. 
+#Contributing
 
-One instance should handle over one thousand emails per second.
+Visit us on EFNet IRC in #projectnewsletter
 
+#About
+More information: http://archiveteam.org/index.php?title=Project_Newsletter
 
-Usage
------
-
-Give your app an inbox easily::
-
-    from inbox import Inbox
-
-    inbox = Inbox()
-
-    @inbox.collate
-    def handle(to, sender, subject, body):
-        ...
-
-    # Bind directly.
-    inbox.serve(address='0.0.0.0', port=4467)
-
-
-You can also defer to the commandline::
-
-    if __name__ == '__main__':
-        inbox.dispatch()
-
-::
-
-    $ dasinbox.py 0.0.0.0 4467
-    [2012-04-28 07:31] INFO: inbox: Starting SMTP server at 0.0.0.0:4467
-
-
-Installation
-------------
-
-Installing Inbox.py is simple::
-
-    $ pip install inbox
+##Licensing
+inbox.py library Copyright (c) 2012, Kenneth Reitz

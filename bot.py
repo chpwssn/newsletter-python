@@ -37,7 +37,10 @@ class IRCBot ( threading.Thread ):
                 
                 
     def sendmsg(self, message):
-        self.s.send("PRIVMSG "+self.chansrc+" :"+message+"\n")
+        try:
+            self.s.send("PRIVMSG "+self.chansrc+" :"+message+"\n")
+        except:
+            self.s.send("PRIVMSG "+CHANNELINIT+" :"+message+"\n")
 
     def parsemsg(self, msg):
         complete=msg[1:].split(':',1) #Parse the message into useful data
